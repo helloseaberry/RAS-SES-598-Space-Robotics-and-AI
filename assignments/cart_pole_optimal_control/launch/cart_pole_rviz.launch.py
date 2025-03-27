@@ -4,6 +4,7 @@ from launch.substitutions import Command, LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 import os
+from launch.actions import TimerAction
 
 def generate_launch_description():
     pkg_share = FindPackageShare('cart_pole_optimal_control').find('cart_pole_optimal_control')
@@ -11,6 +12,19 @@ def generate_launch_description():
     
     # Create and return launch description
     return LaunchDescription([
+
+        TimerAction(
+            period=3.0,
+            actions=[
+                Node(
+                    package='cart_pole_optimal_control',
+                    executable='lqr_controller',
+                    name='lqr_controller',  
+                    output='screen'
+                )
+            ]
+        ),
+
         # Gazebo (headless mode)
         ExecuteProcess(
             cmd=['gz', 'sim', '-r', '-s', 'empty.sdf'],  # -s for headless mode
@@ -37,11 +51,17 @@ def generate_launch_description():
             output='screen',
             arguments=[
                 # Cart force command (ROS -> Gazebo)
+            #    '/model/cart_pole/joint/cart_to_base/cmd_force@std_msgs/msg/Float64]gz.msgs.Double',
                 '/model/cart_pole/joint/cart_to_base/cmd_force@std_msgs/msg/Float64]gz.msgs.Double',
                 # Joint states (Gazebo -> ROS)
-                '/world/empty/model/cart_pole/joint_state@sensor_msgs/msg/JointState[ignition.msgs.Model',
+            #    '/world/empty/model/cart_pole/joint_state@sensor_msgs/msg/JointState[ignition.msgs.Model',
+                '/world/empty/model/cart_pole/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model'
                 # Clock (Gazebo -> ROS)
-                '/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock'
+            #    '/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock'
+                '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'
+            
+            
+
             ],
         ),
 

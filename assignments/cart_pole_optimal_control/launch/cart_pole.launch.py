@@ -20,8 +20,12 @@ def generate_launch_description():
         ),
 
         # Gazebo
+        #ExecuteProcess(
+        #    cmd=['gz', 'sim', '-r', 'empty.sdf'],
+        #    output='screen'
+        #),
         ExecuteProcess(
-            cmd=['gz', 'sim', '-r', 'empty.sdf'],
+            cmd=['gz', 'sim', '-r', 'empty.sdf', '--headless'],
             output='screen'
         ),
 

@@ -209,21 +209,21 @@ This will demonstrate understanding of:
 - Message publishing patterns 
 
 ### Assignment 1: First-Order Boustrophedon Navigator (Lawnmower pattern) using ROS2
-Final parameter values with justification
+Final parameter values with justification:
 - Kp_linear set to 10.0 to increase the movement of the robot, this helps it get to the next point with ease. This is the proportional gain of linear velocity.
 - Kd_linear set to 0.5 to implement a bit of dampening in the system. This one is the derivative gain of the linear velocity. This is the derivative gain of the linear velocity.
 - Kp_angular set to 10.0 to increase the turns the bot makes and head to the desired position quickly. This is the proportional gain of the angular velocity.
 - Kd_angular set to 1.0 to reduce the oscillations seen from a high kp_angular value and smooth out the turns.This is the derivative gain of the angular velocity. 
 - spacing set to 1.0 to ensure the robot covered the desired area.
 
-Performance metrics and analysis
+Performance metrics and analysis:
 - Final Cross-Track Error	0.125
 - Maximum Cross-Track Error	0.328
 
 Plots showing Cross-track error over time, Trajectory plot, Velocity profiles can be found at: RAS-SES-598-Space-Robotics-and-AI/assignments/first_order_boustrophedon_navigator/rqt_plot_0127.png
 
-Discussion of tuning methodology
+Discussion of tuning methodology:
 Initially this controller was tested with small Kp_linear values from 1.5-3.0 and higher values of Kp_angular 5.5-7.0 as the robot showed a correct linear path during simulation but it struggled to make the turns sharper. Since the lawnmower survey path needed to have symmetrical rows, the goal was to sharpen the turns to cover the desired path. These values tested were causing the robot to zigzag and oscillate drastically so the initial values of spacing (1.0) and Kp_linear (10.0) were used. The Kp_linear was tested with a higher Kd_linear, this would show the bot making steeper turns but would bounce out of the trajectory and the straight-line segments would be corrupted. To ensure the row transition was smooth, the Kd_angular was increased and this prevented the robot's path from oscillating while turning. The values tested for Kd_angular were 0.2-1.0 and 1.0 showed to be the steadiest value paired with Kp_angular (10.0). In the first trials, the Kp_angular value was initially tested from 5.0-10.0, this showed reasonable responsiveness while the robot shifted from row to row and showed minimal oscillations, that is why it was chosen to be paired with a high value of Kp_linear.  
 
-Challenges and solutions
+Challenges and solutions:
 The main obstacle at first was blindly tuning the controller and not producing a symmetrical path. To troubleshoot this, one value was updated at a time to see the final Cross-Track Error and visually analyze the spaces in between the rows. Kp_linear was first tested while the rest of the values remained constant, this made it easier to isolate the issues and update the controller accordingly. Another issue was fine tuning the controller live after several hours of running the program and it would bug out the robot at times. To observe exactly how the controller values influence the robot from start to finish, the python script would be updated and ran with TurtleSim.
