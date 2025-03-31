@@ -265,3 +265,18 @@ Students should analyze:
 ## License
 This work is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/).
 [![Creative Commons License](https://i.creativecommons.org/l/by/4.0/88x31.png)](http://creativecommons.org/licenses/by/4.0/) 
+
+### Assignment 2: Cart-Pole Optimal Control using ROS2
+
+Final parameter values with justification:
+- The lqr controller was tested using a variety of configurations. Q = diag([1, 1, 10, 10]) was initially used with R = 0.1. This configuration provided moderate control on the cart-pole system, but it reacted quickly to to fix errors which would result in overcorrection and oscillation. The configuration was updated to Q = diag([10, 2, 50, 5]) and R = 0.5, where the cart position Q[0] was increased from 1 to 10 first to penalize lateral motion, cart velocity Q[1] increased from 1 to 2, pole angle Q[2] increased from 10 to 50 to add a greater penalty and encourage the controller to keep the polu upright, and lastly, angular velocity Q[3] was reduced from 10 to 5. These updated values increased the focus on stability while applying a greater penalty on control effort. This enables better controller response to deviation in pole angle and cart motion, and helps keep the pole upright. Increasing R also helps reduce excessive force application with shorter bursts.
+
+Performance metrics and analysis:
+- The plot for cart position, pole angle and control force can be found at: RAS-SES-598-Space-Robotics-and-AI/assignments/cart_pole_optimal_control/Cart-Pole Optimal Control Graph.jpg
+- These results show that the cart was able to stay close to the center, and the pole angle successfully recovered from the initial offset. The control force shows alternating burst, this indicates that the controller was able to correct the system while minimizing energy use.
+
+Discussion of tuning methodology:
+- The controller was initially tested using the default Q and R matrices. These showed good balancing performance but also demonstrated in forceful actuation due to the small R value. Using this as a baseline, the pole angle was increased from 10 to 50 to make the controller more responsive to changes in the angle, the control penalty R was increased to shorten the bursts of force and discourage large control force inputs. To help the cart stay centered and slow down the velocity, cart position and velocity was increased to 10 and 2, respectively.
+
+Challenges and solutions:
+- The first challenge with the default Q and R matrices was from the system being overcorrected and making the pole unstable. The small R value enabled large force spikes and make the pole swing back and forth in an attempt to stabilize the system. The solution for this was making the controller more conservative by increasing R, this helped reduce the excessive oscillations and the controller was able to correct with less force. Another challenge was increasing the Q values without having enough damping force to stabilize the reactions. By optimizing Q, it was possible for the controller to balance the quick response needed to smoothly keep the pole upright.
